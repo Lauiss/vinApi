@@ -7,7 +7,8 @@ const util = new Util();
 //db_Manager.queryDb("DROP TABLE Purchases");
 db_Manager.createTable('Purchases');
 
-let testItem = {name: 'Sweat addidas', 
+let testItem = {
+                name: 'Sweat addidas', 
                 description: 'carré comme le nord de la corée', 
                 size: 'L', 
                 state:5,
@@ -18,7 +19,8 @@ let testItem = {name: 'Sweat addidas',
                 currency:'EUR',
                 ship_size:0,
                 color:'Bleu',
-                buy_country:'FRA'}
+                buy_country:'FRA'
+                }
 // name => String 255 max
 // description => String Longtext
 // size =>
@@ -35,7 +37,6 @@ let testItem = {name: 'Sweat addidas',
 db_Manager.insert(testItem);
 db_Manager.queryDb("SELECT * FROM Purchases");
 db_Manager.closeConnection();
-
 
 /*const app: any = express();
 app.get('/', (req: any, res: any) => {

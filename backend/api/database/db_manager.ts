@@ -29,24 +29,28 @@ export class dbManager {
                 if(e) throw e 
             console.log("Base de données créée avec succès.")})
 
-            connection.query(`USE ${dbname}`, function(e:Error){
+            connection.query(`USE ${dbname}`, function(e:Error, res:any){
                 if(e) throw e 
-            console.log("Base de données prête à l'emploi.")})
+            console.log("Base de données prête à l'emploi.");
+            return res;
+        })
     }
 
     createTable(table_name:string, connection=this.db_connection){
-            let sqlQuery: string = "CREATE TABLE IF NOT EXISTS " + table_name + "(e_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255) NOT NULL, description LONGTEXT, size VARCHAR(10), state INTEGER NOT NULL, status INTEGER, brand VARCHAR(255) NOT NULL, buy_price INTEGER NOT NULL, buy_date VARCHAR(20) NOT NULL, currency VARCHAR(3) NOT NULL, pictures LONGTEXT, ship_size INTEGER NOT NULL, color VARCHAR(50), buy_country VARCHAR(3) NOT NULL);";
-            connection.query(sqlQuery, function (e: Error) {
+            let sqlQuery: string = "CREATE TABLE IF NOT EXISTS " + table_name + "(e_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255) NOT NULL, description LONGTEXT, size VARCHAR(10), state INTEGER NOT NULL, status INTEGER, brand VARCHAR(255) NOT NULL, buy_price INTEGER NOT NULL, buy_date VARCHAR(255) NOT NULL, currency VARCHAR(3) NOT NULL, pictures LONGTEXT, ship_size INTEGER NOT NULL, color VARCHAR(50), buy_country VARCHAR(3) NOT NULL);";
+            connection.query(sqlQuery, function (e: Error, res: any) {
                 if (e) throw e;
                 console.log("Table créée avec succès.");
+                return res;
             });
     }
 
     insert(entity:any, connection=this.db_connection){
-            var sqlQuery = `INSERT INTO Purchases (name,description,size,state,status,brand,buy_price,buy_date,currency,ship_size,color,buy_country) VALUES ('${entity.name}','${entity.description}','${entity.size}',${entity.state},${entity.status},'${entity.brand}',${entity.buy_price},${entity.buy_date},'${entity.currency}',${entity.ship_size},'${entity.color}','${entity.buy_country}');`;
-            connection.query(sqlQuery, function (e: Error) {
+            var sqlQuery = `INSERT INTO Purchases (name,description,size,state,status,brand,buy_price,buy_date,currency,ship_size,color,buy_country) VALUES ('${entity.name}','${entity.description}','${entity.size}',${entity.state},${entity.status},'${entity.brand}',${entity.buy_price},'${entity.buy_date}','${entity.currency}',${entity.ship_size},'${entity.color}','${entity.buy_country}');`;
+            connection.query(sqlQuery, function (e: Error, res: any) {
               if (e) throw e;
-              console.log("1 record inserted");
+              console.log(res.affectedRows + " record(s) inserted");
+              return res;
             });
     }
 
@@ -55,6 +59,7 @@ export class dbManager {
             connection.query(sqlQuery, function (e:Error, res:any) {
               if (e) throw e;
               console.log("Number of records deleted: " + res.affectedRows);
+              return res;
             });
 
     }
@@ -66,6 +71,7 @@ export class dbManager {
             connection.query(sql, function (e: Error, res: any) {
               if (e) throw e;
               console.log(res.affectedRows + " ligne(s) modifiée(s)");
+              return res;
             });
           });
     }
@@ -86,6 +92,7 @@ export class dbManager {
             connection.query(query, function (e:Error, res:any) {
               if (e) throw e;
               console.log(res);
+              return res;
             });
     }
 }

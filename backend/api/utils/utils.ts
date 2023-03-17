@@ -1,5 +1,6 @@
 export class Util {
     dateToString(date: Date): String{
+        console.log("on est dans la fonction là => ", date.toLocaleDateString('en-GB'))
         return date.toLocaleDateString('en-GB');
     }
 

@@ -4,9 +4,10 @@ const db_manager_1 = require("./database/db_manager");
 const utils_1 = require("./utils/utils");
 const db_Manager = new db_manager_1.dbManager('vindb', 'root', 'root');
 const util = new utils_1.Util();
-//db_Manager.queryDb("DROP TABLE Purchases");
+db_Manager.queryDb("DROP TABLE Purchases");
 db_Manager.createTable('Purchases');
-let testItem = { name: 'Sweat addidas',
+let testItem = {
+    name: 'Sweat addidas',
     description: 'carré comme le nord de la corée',
     size: 'L',
     state: 5,
@@ -17,7 +18,8 @@ let testItem = { name: 'Sweat addidas',
     currency: 'EUR',
     ship_size: 0,
     color: 'Bleu',
-    buy_country: 'FRA' };
+    buy_country: 'FRA'
+};
 // name => String 255 max
 // description => String Longtext
 // size =>
@@ -33,10 +35,11 @@ let testItem = { name: 'Sweat addidas',
 db_Manager.insert(testItem);
 db_Manager.queryDb("SELECT * FROM Purchases");
 db_Manager.closeConnection();
+console.log('cacacacaa' + testItem.buy_date);
 /*const app: any = express();
 app.get('/', (req: any, res: any) => {
     res.send('Well done!');
 })
 app.listen(3000, () => {
     console.log('The application is listening on port 3000!');
-})*/
+})*/ 

@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Util = void 0;
 class Util {
     dateToString(date) {
+        console.log("on est dans la fonction là => ", date.toLocaleDateString('en-GB'));
         return date.toLocaleDateString('en-GB');
     }
     createDateString(year, month, day) {

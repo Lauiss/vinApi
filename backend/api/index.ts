@@ -1,7 +1,9 @@
 import express from 'express';
 import { dbManager } from './database/db_manager';
 import { Util } from './utils/utils';
-
+import { ProxyManager } from './proxy_manager/proxy_manager';
+import { VintedFetcher } from './vinted_fetcher/vinted_fetcher';
+/*
 const db_Manager = new dbManager('vindb','root','root');
 const util = new Util();
 //db_Manager.queryDb("DROP TABLE Purchases");
@@ -45,3 +47,14 @@ app.get('/', (req: any, res: any) => {
 app.listen(3000, () => {
     console.log('The application is listening on port 3000!');
 })*/
+
+const proxyManager = new ProxyManager();
+proxyManager.initAddrAndPort().then(() => {
+    console.log(proxyManager.getProxies());
+    console.log('ok');
+    const vintedFetcher = new VintedFetcher();
+    vintedFetcher.fetchVintedCookie().then((res: any) => console.log(res))
+    .catch((e: Error) => { console.log(e)});
+})
+.catch((e: Error) => { console.log('Erreur lors de la récupération des proxys : ' + e)});
+

@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.dbManager = void 0;
+exports.DbManager = void 0;
 let mysql = require('mysql');
-class dbManager {
+class DbManager {
     constructor(dbname, dbuname, dbpwd) {
         this.db_name = dbname;
         this.db_connection = mysql.createConnection({
@@ -32,8 +32,17 @@ class dbManager {
             return res;
         });
     }
-    createTable(table_name, connection = this.db_connection) {
-        let sqlQuery = "CREATE TABLE IF NOT EXISTS " + table_name + "(e_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255) NOT NULL, description LONGTEXT, size VARCHAR(10), state INTEGER NOT NULL, status INTEGER, brand VARCHAR(255) NOT NULL, buy_price INTEGER NOT NULL, buy_date VARCHAR(255) NOT NULL, currency VARCHAR(3) NOT NULL, pictures LONGTEXT, ship_size INTEGER NOT NULL, color VARCHAR(50), buy_country VARCHAR(3) NOT NULL);";
+    createTablePurchases(connection = this.db_connection) {
+        let sqlQuery = "CREATE TABLE IF NOT EXISTS Purchases (e_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255) NOT NULL, description LONGTEXT, size VARCHAR(10), state INTEGER NOT NULL, status INTEGER, brand VARCHAR(255) NOT NULL, buy_price INTEGER NOT NULL, buy_date VARCHAR(255) NOT NULL, currency VARCHAR(3) NOT NULL, pictures LONGTEXT, ship_size INTEGER NOT NULL, color VARCHAR(50), buy_country VARCHAR(3) NOT NULL);";
+        connection.query(sqlQuery, function (e, res) {
+            if (e)
+                throw e;
+            console.log("Table créée avec succès.");
+            return res;
+        });
+    }
+    createTableLinks(connection = this.db_connection) {
+        let sqlQuery = "CREATE TABLE IF NOT EXISTS Links (l_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY, name VARCHAR(255) NOT NULL, link LONGTEXT);";
         connection.query(sqlQuery, function (e, res) {
             if (e)
                 throw e;
@@ -93,4 +102,4 @@ class dbManager {
         });
     }
 }
-exports.dbManager = dbManager;
+exports.DbManager = DbManager;

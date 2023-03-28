@@ -1,6 +1,6 @@
 let mysql = require('mysql');
 
-export class dbManager {
+export class DbManager {
     db_name: string;
     public db_connection: any;
 

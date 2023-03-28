@@ -1,8 +1,8 @@
 import express from 'express';
-import { dbManager } from './database/db_manager';
+import { DbManager } from './database/db_manager';
 import { Util } from './utils/utils';
 import { ProxyManager } from './proxy_manager/proxy_manager';
-import { VintedFetcher } from './vinted_fetcher/vinted_fetcher';
+import { VintedFetcher } from './vinted_fetcher/vinted_fetcher.js';
 /*
 const db_Manager = new dbManager('vindb','root','root');
 const util = new Util();
@@ -39,22 +39,47 @@ let testItem = {
 db_Manager.insert(testItem);
 db_Manager.queryDb("SELECT * FROM Purchases");
 db_Manager.closeConnection();
+*/
 
-/*const app: any = express();
+const app: any = express();
+const dbManager = new DbManager('vindb','root','root');
+const proxyManager = new ProxyManager();
+const vintedFetcher = new VintedFetcher();
+
 app.get('/', (req: any, res: any) => {
-    res.send('Well done!');
+    res.send({status:200, message:"API en ligne."});
 })
+
+app.get('/getLinks', (req: any, res: any) => {
+    res.send({result: dbManager.queryDb("SELECT * FROM Links;")});
+})
+
+app.get('/getAllPurchases', (req: any, res: any) => {
+    res.send({result: dbManager.queryDb("SELECT * FROM Purchases;")});
+})
+
+app.get('/initDb', (req:any, res:any) => {
+    res.send({createDb: dbManager.createDb(), createTablePurchases: dbManager.createTablePurchases(), createTableLinks: dbManager.createTableLinks()});
+})
+
+app.post('/insert', (req: any, res: any) => {
+    res.send({status: dbManager.insert(req.body)})
+})
+
+app.post('/remove', (req: any, res: any) => {
+    res.send({status: dbManager.insert(req.body.item)})
+})
+
+app.post('/update', (req: any, res: any) => {
+    res.send({status: dbManager.update(req.body.query, req.body.where)})
+})
+
+app.post('/searchOnVinted', (req: any, res: any) => {
+    res.send({res: vintedFetcher.search(req.body.url)})
+})
+
+app.get('')
 app.listen(3000, () => {
     console.log('The application is listening on port 3000!');
-})*/
-
-const proxyManager = new ProxyManager();
-proxyManager.initAddrAndPort().then(() => {
-    console.log(proxyManager.getProxies());
-    console.log('ok');
-    const vintedFetcher = new VintedFetcher();
-    vintedFetcher.fetchVintedCookie().then((res: any) => console.log(res))
-    .catch((e: Error) => { console.log(e)});
 })
-.catch((e: Error) => { console.log('Erreur lors de la récupération des proxys : ' + e)});
 

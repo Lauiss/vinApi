@@ -8,11 +8,6 @@ const db_manager_1 = require("./database/db_manager");
 const proxy_manager_1 = require("./proxy_manager/proxy_manager");
 const vinted_fetcher_js_1 = require("./vinted_fetcher/vinted_fetcher.js");
 /*
-const db_Manager = new dbManager('vindb','root','root');
-const util = new Util();
-//db_Manager.queryDb("DROP TABLE Purchases");
-db_Manager.createTable('Purchases');
-
 let testItem = {
                 name: 'Sweat addidas',
                 description: 'carré comme le nord de la corée',
@@ -39,40 +34,94 @@ let testItem = {
 //ship_size => 0: petit 1: moyen 2: grand
 //color => String
 //buy_country => Pays d'achat
-
-db_Manager.insert(testItem);
-db_Manager.queryDb("SELECT * FROM Purchases");
-db_Manager.closeConnection();
 */
 const app = (0, express_1.default)();
 const dbManager = new db_manager_1.DbManager('vindb', 'root', 'root');
 const proxyManager = new proxy_manager_1.ProxyManager();
 const vintedFetcher = new vinted_fetcher_js_1.VintedFetcher();
 app.get('/', (req, res) => {
-    res.send({ status: 200, message: "API en ligne." });
+    res.status(200).send({
+        message: "API en ligne."
+    });
 });
-app.get('/getLinks', (req, res) => {
-    res.send({ result: dbManager.queryDb("SELECT * FROM Links;") });
+app.get('/getAllLinks', (req, res) => {
+    dbManager.queryDb("SELECT * FROM Links;")
+        .then(result => {
+        res.status(200).send({ result: result });
+    })
+        .catch((error) => {
+        console.error('Une erreur est survenue => ', error);
+        res.status(500).send('Internal server error');
+    });
 });
 app.get('/getAllPurchases', (req, res) => {
-    res.send({ result: dbManager.queryDb("SELECT * FROM Purchases;") });
+    dbManager.queryDb('SELECT * FROM Purchases;')
+        .then((result) => {
+        res.status(200).send(JSON.stringify({ result: result }));
+    })
+        .catch((error) => {
+        console.error('Une erreur est survenue => ', error);
+        res.status(500).send('Internal server error');
+    });
 });
 app.get('/initDb', (req, res) => {
-    res.send({ createDb: dbManager.createDb(), createTablePurchases: dbManager.createTablePurchases(), createTableLinks: dbManager.createTableLinks() });
+    let jsonobject = {};
+    dbManager.createDb().then((result) => {
+        jsonobject['createDb'] = result;
+        dbManager.createTablePurchases().then((result) => {
+            jsonobject['createTablePurchases'] = result;
+            dbManager.createTableLinks().then((result) => {
+                jsonobject['createTableLinks'] = result;
+                res.status(200).send(jsonobject);
+            }).catch((error) => {
+                console.error('Une erreur est survenue => ', error);
+                res.status(500).send('Internal server error');
+            }).catch((error) => {
+                console.error('Une erreur est survenue => ', error);
+                res.status(500).send('Internal server error');
+            });
+        }).catch((error) => {
+            console.error('Une erreur est survenue => ', error);
+            res.status(500).send('Internal server error');
+        });
+    });
 });
 app.post('/insert', (req, res) => {
-    res.send({ status: dbManager.insert(req.body) });
+    dbManager.insert(req.body).then((result) => {
+        res.status(200).send({ status: result });
+    })
+        .catch((error) => {
+        console.error('Une erreur est survenue => ', error);
+        res.status(500).send('Internal server error');
+    });
 });
 app.post('/remove', (req, res) => {
-    res.send({ status: dbManager.insert(req.body.item) });
+    dbManager.insert(req.body.item).then((result) => {
+        res.status(200).send({ status: result });
+    })
+        .catch((error) => {
+        console.error('Une erreur est survenue => ', error);
+        res.status(500).send('Internal server error');
+    });
 });
 app.post('/update', (req, res) => {
-    res.send({ status: dbManager.update(req.body.query, req.body.where) });
+    dbManager.update(req.body.query, req.body.where).then((result) => {
+        res.status(200).send({ status: result });
+    })
+        .catch((error) => {
+        console.error('Une erreur est survenue => ', error);
+        res.status(500).send('Internal server error');
+    });
 });
 app.post('/searchOnVinted', (req, res) => {
-    res.send({ res: vintedFetcher.search(req.body.url) });
+    vintedFetcher.search(req.body.url).then((result) => {
+        res.status(200).send({ result: result });
+    })
+        .catch((error) => {
+        console.error('Une erreur est survenue => ', error);
+        res.status(500).send('Internal server error');
+    });
 });
-app.get('');
 app.listen(3000, () => {
-    console.log('The application is listening on port 3000!');
+    console.log('Le serveur est à l\'écoute sur le port 3000');
 });

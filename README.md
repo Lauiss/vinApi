@@ -25,7 +25,7 @@ Pour installer ce programme, suivez ces étapes :
       Windows : [Télécharger Node.js depuis le site officiel](https://nodejs.org/en)
 
 ## Usage
-Pour lancer le générateur de mot de passe :
+Pour lancer le serveur express :
 
     node ./
 
